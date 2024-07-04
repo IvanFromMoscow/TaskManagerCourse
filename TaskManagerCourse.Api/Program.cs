@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using TaskManagerCourse.Api.Models;
 using TaskManagerCourse.Api.Models.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +14,32 @@ builder.Services.AddSwaggerGen();
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(
         options => options.UseSqlServer(connection)
-    );   
+    );
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new()
+        {
+            // указывает будет ли осуществляться валидация издателя при валидации токена
+            ValidateIssuer = true,
+            // строка представляющая издателя
+            ValidIssuer = AuthOptions.ISSUER,
+            // будет ли валидироваться потребитель
+            ValidateAudience = true,
+            // установка потребителя
+            ValidAudience = AuthOptions.Audience,
+            // будет ли валидироваться время жизни
+            ValidateLifetime = true,
+            // установка ключа безопасности
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            // валидация ключа безопасности
+            ValidateIssuerSigningKey = true
+        };
+    }
+        
+
+    );
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,7 +48,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

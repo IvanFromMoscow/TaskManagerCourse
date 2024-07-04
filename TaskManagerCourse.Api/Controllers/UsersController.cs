@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerCourse.Api.Models;
@@ -7,6 +8,7 @@ using TaskManagerCourse.Common.Models;
 
 namespace TaskManagerCourse.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -16,12 +18,15 @@ namespace TaskManagerCourse.Api.Controllers
         {
             db = applicationContext;
         }
+        
         [HttpGet("test")]
+        [AllowAnonymous]
         public IActionResult Test()
         {
             return Ok("Hello world!");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public IActionResult CreateUser([FromBody] UserModel userModel)
         {
@@ -40,6 +45,8 @@ namespace TaskManagerCourse.Api.Controllers
             }
             return BadRequest();
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPatch("update/{id}")]
         public IActionResult UpdateUser(int id, [FromBody] UserModel userModel)
         {
@@ -64,6 +71,8 @@ namespace TaskManagerCourse.Api.Controllers
             }
             return BadRequest();
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteUser(int id)
         {
@@ -83,6 +92,7 @@ namespace TaskManagerCourse.Api.Controllers
             return await db.Users.Select(u => u.ToDto()).ToListAsync();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create/all")]
         public async Task<IActionResult> CreateMultipleUsers([FromBody] List<UserModel> userModels)
         {
