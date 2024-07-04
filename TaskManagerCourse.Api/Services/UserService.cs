@@ -1,11 +1,14 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Text;
+using TaskManagerCourse.Api.Interfaces;
 using TaskManagerCourse.Api.Models;
 using TaskManagerCourse.Api.Models.Data;
+using TaskManagerCourse.Common.Models;
 
 namespace TaskManagerCourse.Api.Services
 {
-    public class UserService
+    public class UserService : ICommonService<UserModel>
     {
         private readonly ApplicationContext db;
         public UserService(ApplicationContext applicationContext)
@@ -18,7 +21,7 @@ namespace TaskManagerCourse.Api.Services
             string userName = string.Empty;
             string userPassword = string.Empty;
             string authHeader = request.Headers["Authorization"].ToString();
-            if (authHeader != null && authHeader.StartsWith("Basic")) 
+            if (authHeader != null && authHeader.StartsWith("Basic"))
             {
                 string encodedUserNamePass = authHeader.Replace("Basic", "");
                 var encoding = Encoding.GetEncoding("iso-8859-1");
@@ -30,17 +33,17 @@ namespace TaskManagerCourse.Api.Services
             return new Tuple<string, string>(userName, userPassword);
         }
 
-        public User GetUser(string login, string password) 
+        public User GetUser(string login, string password)
         {
             var user = db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
             return user;
         }
 
-        public ClaimsIdentity GetIdentity(string username,  string password)
+        public ClaimsIdentity GetIdentity(string username, string password)
         {
             User currentUser = GetUser(username, password);
-            if (currentUser != null) 
-            { 
+            if (currentUser != null)
+            {
                 currentUser.LastLoginDate = DateTime.Now;
                 db.Users.Update(currentUser);
                 db.SaveChanges();
@@ -55,6 +58,86 @@ namespace TaskManagerCourse.Api.Services
                 return claimsIdentity;
             }
             return null;
+        }
+
+        public bool Create(UserModel model)
+        {
+            try
+            {
+                User newUser = new User(
+                    model.FirstName, model.LastName,
+                    model.Email,
+                    model.Password,
+                    model.Status,
+                    model.Phone,
+                    model.Photo);
+                db.Users.Add(newUser);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool Update(int id, UserModel model)
+        {
+
+            User userForUpdate = db.Users.FirstOrDefault(x => x.Id == id);
+            if (userForUpdate != null)
+            {
+                return DoAction(() =>
+                {
+                    userForUpdate.FirstName = model.FirstName;
+                    userForUpdate.LastName = model.LastName;
+                    userForUpdate.Email = model.Email;
+                    userForUpdate.Password = model.Password;
+                    userForUpdate.Status = model.Status;
+                    userForUpdate.Phone = model.Phone;
+                    userForUpdate.Photo = model.Photo;
+
+                    db.Users.Update(userForUpdate);
+                    db.SaveChanges();
+                });
+            }
+            return false;
+        }
+
+        public bool Delete(int id)
+        {
+            User userForDelete = db.Users.FirstOrDefault(x => x.Id == id);
+            if (userForDelete != null)
+            {
+                return DoAction(() =>
+                {
+                    db.Users.Remove(userForDelete);
+                    db.SaveChanges();
+                });
+            }
+            return false;
+        }
+        public bool CreateMultipleUsers(List<UserModel> userModels)
+        {
+            return DoAction(() =>
+            {
+                var newUsers = userModels.Select(u => new User(u)).ToList();
+                db.Users.AddRange(newUsers);
+                db.SaveChangesAsync();
+            });
+        }
+        private bool DoAction(Action action)
+        {
+            try
+            {
+                action.Invoke();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
     }
 }
