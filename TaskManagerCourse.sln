@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34407.89
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerCourse.Api", "TaskManagerCourse.Api\TaskManagerCourse.Api.csproj", "{F7DA7556-ADFC-4EFB-887D-C4E4918D3FE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerCourse.Api", "TaskManagerCourse.Api\TaskManagerCourse.Api.csproj", "{F7DA7556-ADFC-4EFB-887D-C4E4918D3FE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerCourse.Common.Models", "TaskManagerCourse.Common.Models\TaskManagerCourse.Common.Models.csproj", "{D5F19816-C542-4E58-B6E9-F70E1AAC90F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerCourse.Common.Models", "TaskManagerCourse.Common.Models\TaskManagerCourse.Common.Models.csproj", "{D5F19816-C542-4E58-B6E9-F70E1AAC90F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerCourse.Client", "TaskManagerCourse.Client\TaskManagerCourse.Client.csproj", "{99B0C1B3-3428-45B2-92C5-066C0EB8F59D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerCourse.ClientTests", "TaskManagerCourse.ClientTests\TaskManagerCourse.ClientTests.csproj", "{9AE47DA4-1E3A-4A1F-9D7F-7CC15A14B055}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{D5F19816-C542-4E58-B6E9-F70E1AAC90F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5F19816-C542-4E58-B6E9-F70E1AAC90F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5F19816-C542-4E58-B6E9-F70E1AAC90F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99B0C1B3-3428-45B2-92C5-066C0EB8F59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99B0C1B3-3428-45B2-92C5-066C0EB8F59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99B0C1B3-3428-45B2-92C5-066C0EB8F59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99B0C1B3-3428-45B2-92C5-066C0EB8F59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE47DA4-1E3A-4A1F-9D7F-7CC15A14B055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE47DA4-1E3A-4A1F-9D7F-7CC15A14B055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE47DA4-1E3A-4A1F-9D7F-7CC15A14B055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE47DA4-1E3A-4A1F-9D7F-7CC15A14B055}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
