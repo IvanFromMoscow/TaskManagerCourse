@@ -18,7 +18,7 @@ namespace TaskManagerCourse.Api.Models
             Name = model.Name;
             Description = model.Description;
             Photo = model.Photo;
-            CreationDate = model.CreationDate;
+            CreationDate = DateTime.Now;
         }
     }
 }
