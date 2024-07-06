@@ -44,15 +44,20 @@ namespace TaskManagerCourse.Api.Models
                 ExecutorId = this.ExecutorId,
         };
         }
-        public CommonModel ToShortDto()
+        public TaskModel ToShortDto()
         {
-            return new CommonModel()
+            return new TaskModel()
             {
                 Id = this.Id,
                 Name = this.Name,
                 Description = this.Description,
                 CreationDate = this.CreationDate,
-                Photo = this.Photo,
+                StartDate = this.CreationDate,
+                EndDate = this.EndDate,
+                DeskId = this.DeskId,
+                Column = this.Column,
+                CreatorId = this.CreatorId,
+                ExecutorId = this.ExecutorId,
             };
         }
         public Task()
