@@ -13,7 +13,7 @@ namespace TaskManagerCourse.Api.Models
         public User Admin { get; set; }
         public int ProjectId { get; set; }
         public Project Project { get; set; }
-        public List<TaskModel> Tasks { get; set; } = new();
+        public List<Task> Tasks { get; set; } = new();
 
         public Desk(DeskModel deskModel) : base(deskModel)
         {
@@ -39,6 +39,17 @@ namespace TaskManagerCourse.Api.Models
                 IsPrivate = this.IsPrivate,
                 ProjectId = this.ProjectId,
                 Columns = JsonConvert.DeserializeObject<string[]>(this.Columns)
+            };
+        }
+        public CommonModel ToShortDto()
+        {
+            return new CommonModel()
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Description = this.Description,
+                CreationDate = this.CreationDate,
+                Photo = this.Photo,
             };
         }
         public Desk()

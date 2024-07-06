@@ -18,7 +18,7 @@ namespace TaskManagerCourse.Api.Models
         public byte[]? Photo { get; set; }
         public List<Project> Projects { get; set; } = new();
         public List<Desk> Desks { get; set; } = new();
-        public List<TaskModel> Tasks { get; set; } = new();
+        public List<Task> Tasks { get; set; } = new();
 
         public User() { }
 

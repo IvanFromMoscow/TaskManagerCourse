@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManagerCourse.Api.Models;
 using TaskManagerCourse.Api.Models.Data;
 using TaskManagerCourse.Api.Services;
 using TaskManagerCourse.Common.Models;
@@ -13,58 +12,51 @@ namespace TaskManagerCourse.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DesksController : ControllerBase
+    public class TasksController : ControllerBase
     {
         private readonly ApplicationContext db;
         private readonly UserService userService;
-        private readonly DeskService deskService;
-        public DesksController(ApplicationContext applicationContext)
+        private readonly TaskService taskService;
+        public TasksController(ApplicationContext applicationContext)
         {
             db = applicationContext;
             userService = new UserService(db);
-            deskService = new DeskService(db);
+            taskService = new TaskService(db);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CommonModel>> GetDesksForCurrentUser()
+        public async Task<IEnumerable<CommonModel>> GetTasksByDesk(int deskId)
+        {
+            return await taskService.GetAll(deskId).ToListAsync();
+        }
+        [HttpGet("user")]
+        public async Task<IEnumerable<CommonModel>> GetTaskForCurrentUser()
         {
             var user = userService.GetUser(HttpContext.User.Identity.Name);
             if (user != null)
             {
-                return await deskService.GetAll(user.Id).ToListAsync();
+                return await taskService.GetTaskForUser(user.Id).ToListAsync();
             }
             return Array.Empty<CommonModel>();
         }
-
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var desk = deskService.Get(id);
-            return desk == null ? NotFound() : Ok(desk);
-        }
-
-        [HttpGet("project")]
-        public async Task<IEnumerable<CommonModel>> GetProjectDesks(int projectId)
-        {
-            var user = userService.GetUser(HttpContext.User.Identity.Name);
-            if (user != null)
-            {
-               return await deskService.GetProjectDesks(projectId, user.Id).ToListAsync();
-            }
-            return Array.Empty<CommonModel>();
+            var task = taskService.Get(id);
+            return task == null ? NotFound() : Ok(task);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] DeskModel deskModel)
+        public IActionResult Create([FromBody] TaskModel taskModel)
         {
             var user = userService.GetUser(HttpContext.User.Identity.Name);
             if (user != null)
             {
-                if (deskModel != null)
+                if (taskModel != null)
                 {
-                    deskModel.AdminId = user.Id;
-                    bool result = deskService.Create(deskModel);
+                    taskModel.CreatorId = user.Id;
+                    bool result = taskService.Create(taskModel);
                     return result ? Ok() : NotFound();
                 }
                 return BadRequest();
@@ -73,25 +65,26 @@ namespace TaskManagerCourse.Api.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Update(int id, [FromBody] DeskModel deskModel)
+        public IActionResult Update(int id, [FromBody] TaskModel taskModel)
         {
             var user = userService.GetUser(HttpContext.User.Identity.Name);
             if (user != null)
             {
-                if (deskModel != null)
+                if (taskModel != null)
                 {
-                    bool result = deskService.Update(id, deskModel);
+                    bool result = taskService.Update(id, taskModel);
                     return result ? Ok() : NotFound();
                 }
                 return BadRequest();
             }
             return Unauthorized();
         }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            bool result = deskService.Delete(id);
-            return result ? Ok() : NotFound();
+            bool result = taskService.Delete(id);
+            return result == true ? Ok() : NotFound();
         }
     }
 }

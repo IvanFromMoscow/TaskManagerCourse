@@ -9,7 +9,7 @@ namespace TaskManagerCourse.Api.Models.Data
         public DbSet<ProjectAdmin> ProjectAdmins { get; set; }
         public DbSet<Project> Projects{ get; set; }
         public DbSet<Desk> Desks{ get; set; }
-        public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<Task> Tasks { get; set; }
 
         public ApplicationContext(DbContextOptions options) : base(options)
         {
