@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text;
-using TaskManagerCourse.Api.Interfaces;
 using TaskManagerCourse.Api.Models;
 using TaskManagerCourse.Api.Models.Data;
 using TaskManagerCourse.Common.Models;
 
 namespace TaskManagerCourse.Api.Services
 {
-    public class UserService : ICommonService<UserModel>
+    public class UserService : AbstarctService, ICommonService<UserModel>
     {
         private readonly ApplicationContext db;
         public UserService(ApplicationContext applicationContext)
@@ -38,7 +37,11 @@ namespace TaskManagerCourse.Api.Services
             var user = db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
             return user;
         }
-
+        public User GetUser(string login)
+        {
+            var user = db.Users.FirstOrDefault(u => u.Email == login);
+            return user;
+        }
         public ClaimsIdentity GetIdentity(string username, string password)
         {
             User currentUser = GetUser(username, password);
@@ -126,17 +129,19 @@ namespace TaskManagerCourse.Api.Services
                 db.SaveChangesAsync();
             });
         }
-        private bool DoAction(Action action)
-        {
-            try
-            {
-                action.Invoke();
-                return true;
-            }
-            catch (Exception)
-            {
 
-                return false;
+        public UserModel Get(int id)
+        {
+            var user = db.Users.FirstOrDefault(u => u.Id == id);
+            return user?.ToDto()!;
+        }
+
+        public IEnumerable<UserModel> GetAllByIds(List<int> userIds)
+        {
+            foreach (var id in userIds)
+            {
+                var user = db.Users.FirstOrDefault(u => u.Id == id)?.ToDto();
+                yield return user;
             }
         }
     }

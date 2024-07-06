@@ -27,7 +27,7 @@ namespace TaskManagerCourse.Api.Controllers
         [AllowAnonymous]
         public IActionResult Test()
         {
-            return Ok("Hello world!");
+            return Ok($"Сервер запущен. Время запуска { DateTime.Now }");
         }
 
         [Authorize(Roles = "Admin")]
@@ -61,7 +61,12 @@ namespace TaskManagerCourse.Api.Controllers
             bool result = userService.Delete(id);
             return result ? Ok() : NotFound();
         }
-
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var user = userService.Get(id);
+            return user == null ? NoContent() : Ok(user);
+        }
         [HttpGet]
         public async Task<IEnumerable<UserModel>> GetUsers() 
         {

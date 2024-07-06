@@ -1,4 +1,4 @@
-﻿namespace TaskManagerCourse.Api.Models
+﻿namespace TaskManagerCourse.Common.Models
 {
     public enum ProjectStatus
     {
