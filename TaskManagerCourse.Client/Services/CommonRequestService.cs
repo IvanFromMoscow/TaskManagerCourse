@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DryIoc;
+using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -33,6 +34,37 @@ namespace TaskManagerCourse.Client.Services
                 result = responseStr;
             }
             return result;
+        }
+
+        protected string GetDataByUrlUseWebClient(HttpMethod method, string url, AuthToken token, string username = null, string password = null, Dictionary<string, string> parameters = null)
+        {
+            WebClient client = new WebClient();
+            if (username != null && password != null)
+            {
+                string encoded = System.Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(username + ":" + password));
+                client.Headers.Add("Authorization", "Basic " + encoded);
+            }
+            else if (token != null)
+            {
+                client.Headers.Add("Authorization", "Bearer " + token.access_token);
+            }
+            if (parameters != null)
+            {
+                foreach (var key in parameters.Keys)
+                {
+                    client.QueryString.Add(key, parameters[key]);
+                }
+            }
+            byte[]? data = Array.Empty<byte>();
+            if (method == HttpMethod.Post)
+            {
+                data = client.UploadValues(url, method.Method, client.QueryString);
+            }
+            if (method == HttpMethod.Get)
+            {
+                data = client.DownloadData(url);
+            }
+            return Encoding.UTF8.GetString(data);
         }
         protected HttpStatusCode SendDataByUrl(HttpMethod method, string url, AuthToken token, string data)
         {
