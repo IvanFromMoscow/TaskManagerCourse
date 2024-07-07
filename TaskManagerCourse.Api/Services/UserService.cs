@@ -86,12 +86,9 @@ namespace TaskManagerCourse.Api.Services
 
         public bool Update(int id, UserModel model)
         {
-
-            User userForUpdate = db.Users.FirstOrDefault(x => x.Id == id);
-            if (userForUpdate != null)
-            {
                 return DoAction(() =>
                 {
+                    User userForUpdate = db.Users.FirstOrDefault(x => x.Id == id);
                     userForUpdate.FirstName = model.FirstName;
                     userForUpdate.LastName = model.LastName;
                     userForUpdate.Email = model.Email;
@@ -103,8 +100,6 @@ namespace TaskManagerCourse.Api.Services
                     db.Users.Update(userForUpdate);
                     db.SaveChanges();
                 });
-            }
-            return false;
         }
 
         public bool Delete(int id)
