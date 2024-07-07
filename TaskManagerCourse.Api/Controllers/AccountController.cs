@@ -30,7 +30,7 @@ namespace TaskManagerCourse.Api.Controllers
 
             if (user != null)
             {
-                return Ok();
+                return Ok(user);
             }
 
             return NotFound();
