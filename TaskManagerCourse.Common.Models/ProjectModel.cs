@@ -13,7 +13,7 @@ namespace TaskManagerCourse.Common.Models
         public ProjectStatus Status { get; set; }
         public List<int> AllUsersIds { get; set; } = new();
         public List<int> AllDesksIds { get; set; } = new();
-        public ProjectModel(string name, string description, string password,
+        public ProjectModel(string name, string description,
                    ProjectStatus status = ProjectStatus.InProgress,
                    byte[]? photo = null)
         {
