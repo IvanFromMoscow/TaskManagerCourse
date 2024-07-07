@@ -62,7 +62,7 @@ namespace TaskManagerCourse.Api.Controllers
             return result ? Ok() : NotFound();
         }
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public ActionResult<UserModel> Get(int id)
         {
             var user = userService.Get(id);
             return user == null ? NoContent() : Ok(user);

@@ -57,5 +57,11 @@ namespace TaskManagerCourse.Client.Services
             var result = SendDataByUrl(HttpMethod.Patch, userControllerUrl + $"/update/{user.Id}", token, userJson);
             return result;
         }
+        public UserModel GetUserById(AuthToken token, int userId)
+        {
+            string response = GetDataByUrl(HttpMethod.Get, userControllerUrl + $"/{userId}", token);
+            UserModel user = JsonConvert.DeserializeObject<UserModel>(response);
+            return user;
+        }
     }
 }
