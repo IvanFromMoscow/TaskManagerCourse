@@ -4,8 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManagerCourse.Client.Views"
-        xmlns:prism="http://prismlibrary.com/"
-        prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="MainWindow" 
@@ -14,6 +12,23 @@
         MinHeight="200"
         MinWidth="300">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" MinWidth="50" MaxWidth="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="0" Style="{StaticResource commonSplitter}"/>
+        <Grid Grid.Column="0">
+            <ItemsControl ItemsSource="{Binding NavButtons}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding Value}" 
+                            Style="{StaticResource commonButton}">
+                            <TextBlock Text="{Binding Key}" Style="{StaticResource commonTextBlock}"/>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>    
+            </ItemsControl>
+        </Grid>
 
     </Grid>
 </Window>
