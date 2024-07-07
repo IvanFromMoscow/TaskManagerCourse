@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using TaskManagerCourse.Client.Models;
+using TaskManagerCourse.Client.Views;
+using TaskManagerCourse.Client.Views.Pages;
 using TaskManagerCourse.Common.Models;
 
 namespace TaskManagerCourse.Client.ViewModels
@@ -20,10 +23,11 @@ namespace TaskManagerCourse.Client.ViewModels
         public DelegateCommand OpenUsersManagerPageCommand;
 
         #endregion
-        public MainWindowViewModel(AuthToken token, UserModel currentUser)
+        public MainWindowViewModel(AuthToken token, UserModel currentUser, Window currentWindow = null)
         {
             Token = token;
             CurrentUser = currentUser;
+            this.currentWindow = currentWindow;
 
             OpenProjectsPageCommand = new DelegateCommand(OpenProjectsPage);
             navButtons.Add(userProjectsBtnName, OpenProjectsPageCommand);
@@ -44,8 +48,9 @@ namespace TaskManagerCourse.Client.ViewModels
             }
 
             LogoutCommand = new DelegateCommand(Logout);
-            navButtons.Add(userLogoutBtnName, LogoutCommand);    
-                
+            navButtons.Add(userLogoutBtnName, LogoutCommand);
+
+            OpenMyInfoPage();
         }
         #region Properties
         private readonly string userProjectsBtnName = "My projects";
@@ -55,57 +60,86 @@ namespace TaskManagerCourse.Client.ViewModels
         private readonly string userLogoutBtnName = "Logout";
         private readonly string usersManagerBtnName = "Users";
 
-        public Dictionary<string, DelegateCommand> navButtons = new Dictionary<string, DelegateCommand>();
+        private Dictionary<string, DelegateCommand> navButtons = new Dictionary<string, DelegateCommand>();
         public Dictionary<string, DelegateCommand> NavButtons
         {
             get { return navButtons; }
             set { navButtons = value; RaisePropertyChanged(nameof(navButtons)); }
         }
-        public AuthToken token;
+        private AuthToken token;
         public AuthToken Token
         {
             get { return token; }
             set { token = value; RaisePropertyChanged(nameof(Token)); }
         }
-        public UserModel currentUser;
+        private UserModel currentUser;
         public UserModel CurrentUser
         {
             get { return currentUser; }
             set { currentUser = value; RaisePropertyChanged(nameof(CurrentUser)); }
         }
+        private string selectedPageName;
+        public string SelectedPageName
+        {
+            get { return selectedPageName; }
+            set { selectedPageName = value; RaisePropertyChanged(nameof(SelectedPageName)); }
+        }
 
-
+        public Page selectedPage;
+        public Page SelectedPage
+        {
+            get { return selectedPage; }
+            set { selectedPage = value; RaisePropertyChanged(nameof(SelectedPage)); }
+        }
+        private Window currentWindow;
         #endregion
 
         #region Methods
         private void OpenProjectsPage()
         {
+            SelectedPageName = userProjectsBtnName;
             ShowMessage(userProjectsBtnName);
         }
         private void OpenTasksPage()
         {
+            SelectedPageName = userTaskBtnName;
             ShowMessage(userTaskBtnName);
         }
         private void OpenDesksPage()
         {
+            SelectedPageName = userDesksBtnName;
             ShowMessage(userDesksBtnName);
         }
         private void OpenMyInfoPage()
         {
-            ShowMessage(userInfoBtnName);
+            var page = new UserInfoPage();
+            page.DataContext = this;
+            OpenPage(page, userProjectsBtnName);
         }
         private void OpenUsersManagerPage()
         {
+            SelectedPageName = usersManagerBtnName;
             ShowMessage(usersManagerBtnName);
         }
         private void Logout()
         {
-            ShowMessage(userLogoutBtnName);
+            var question = MessageBox.Show("Are you sure?", "Logout", MessageBoxButton.YesNo);
+            if(question == MessageBoxResult.Yes && currentWindow != null)
+            {
+                Login login = new Login();
+                login.Show();
+                currentWindow.Close();
+            }
         }
         #endregion
         private void ShowMessage(string message)
         {
             MessageBox.Show(message);
+        }
+        private void OpenPage(Page page, string pageName)
+        {
+            SelectedPage = page;
+            SelectedPageName = pageName;
         }
     }
 }
