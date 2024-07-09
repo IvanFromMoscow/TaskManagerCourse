@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TaskManagerCourse.Client.Models;
+using TaskManagerCourse.Client.Services;
 using TaskManagerCourse.Client.Views;
 using TaskManagerCourse.Client.Views.Pages;
 using TaskManagerCourse.Common.Models;
@@ -14,6 +15,7 @@ namespace TaskManagerCourse.Client.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
+        private CommonViewService viewService;
         #region Commands
         public DelegateCommand OpenProjectsPageCommand;
         public DelegateCommand OpenTasksPageCommand;
@@ -25,6 +27,8 @@ namespace TaskManagerCourse.Client.ViewModels
         #endregion
         public MainWindowViewModel(AuthToken token, UserModel currentUser, Window currentWindow = null)
         {
+            viewService = new CommonViewService();
+            
             Token = token;
             CurrentUser = currentUser;
             this.currentWindow = currentWindow;
@@ -97,8 +101,9 @@ namespace TaskManagerCourse.Client.ViewModels
         #region Methods
         private void OpenProjectsPage()
         {
+            var page = new ProjectsPage();
+            OpenPage(page, userProjectsBtnName, new ProjectsPageViewModel(Token));
             SelectedPageName = userProjectsBtnName;
-            ShowMessage(userProjectsBtnName);
         }
         private void OpenTasksPage()
         {
@@ -108,7 +113,7 @@ namespace TaskManagerCourse.Client.ViewModels
         private void OpenDesksPage()
         {
             SelectedPageName = userDesksBtnName;
-            ShowMessage(userDesksBtnName);
+            viewService.ShowMessage(userDesksBtnName);
         }
         private void OpenMyInfoPage()
         {
@@ -118,7 +123,7 @@ namespace TaskManagerCourse.Client.ViewModels
         private void OpenUsersManagerPage()
         {
             SelectedPageName = usersManagerBtnName;
-            ShowMessage(usersManagerBtnName);
+            viewService.ShowMessage(usersManagerBtnName);
         }
         private void Logout()
         {
@@ -131,11 +136,7 @@ namespace TaskManagerCourse.Client.ViewModels
             }
         }
         #endregion
-        private void ShowMessage(string message)
-        {
-            MessageBox.Show(message);
-        }
-        private void OpenPage(Page page, string pageName, BindableBase viewModel)
+        private void OpenPage(Page page, string pageName = null, BindableBase viewModel = null)
         {
             SelectedPage = page;
             SelectedPageName = pageName;
