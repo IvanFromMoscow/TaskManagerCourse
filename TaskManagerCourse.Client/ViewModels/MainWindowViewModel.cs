@@ -13,7 +13,7 @@ using TaskManagerCourse.Common.Models;
 
 namespace TaskManagerCourse.Client.ViewModels
 {
-    class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase
     {
         private CommonViewService viewService;
         #region Commands
@@ -102,7 +102,7 @@ namespace TaskManagerCourse.Client.ViewModels
         private void OpenProjectsPage()
         {
             var page = new ProjectsPage();
-            OpenPage(page, userProjectsBtnName, new ProjectsPageViewModel(Token));
+            OpenPage(page, userProjectsBtnName, new ProjectsPageViewModel(Token, this));
             SelectedPageName = userProjectsBtnName;
         }
         private void OpenTasksPage()
@@ -136,7 +136,7 @@ namespace TaskManagerCourse.Client.ViewModels
             }
         }
         #endregion
-        private void OpenPage(Page page, string pageName = null, BindableBase viewModel = null)
+        public void OpenPage(Page page, string pageName = null, BindableBase viewModel = null)
         {
             SelectedPage = page;
             SelectedPageName = pageName;

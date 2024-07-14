@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TaskManagerCourse.Client.Models;
 using TaskManagerCourse.Client.Services;
 using TaskManagerCourse.Client.Views.AddWindows;
+using TaskManagerCourse.Client.Views.Pages;
 using TaskManagerCourse.ClientTests.Services;
 using TaskManagerCourse.Common.Models;
 
@@ -24,15 +25,17 @@ namespace TaskManagerCourse.Client.ViewModels
         public DelegateCommand SelectPhotoForProjectCommand { get; private set; }
         public DelegateCommand AddUsersToProjectCommand { get; private set; }
         public DelegateCommand OpenNewUsersToProjectCommand { get; private set; }
+        public DelegateCommand OpenProjectDesksPageCommand { get; private set; }
 
+        private readonly MainWindowViewModel mainWindowViewModel;
         #endregion
         private AuthToken token;
         private UsersRequestService usersRequestService;
         private ProjectsRequestService projectsRequestService;
         private CommonViewService commonViewService;
-        public ProjectsPageViewModel(AuthToken token = null)
+        public ProjectsPageViewModel(AuthToken token, MainWindowViewModel mainWindow)
         {
-
+            mainWindowViewModel = mainWindow;
             usersRequestService = new UsersRequestService();
             commonViewService = new CommonViewService();
             projectsRequestService = new ProjectsRequestService();
@@ -46,6 +49,7 @@ namespace TaskManagerCourse.Client.ViewModels
             SelectPhotoForProjectCommand = new DelegateCommand(SelectPhotoForProject);
             AddUsersToProjectCommand = new DelegateCommand(AddUsersToProject);
             OpenNewUsersToProjectCommand = new DelegateCommand(OpenNewUsersToProject);
+            OpenProjectDesksPageCommand = new DelegateCommand(OpenProjectDesksPage);
         }
 
 
@@ -200,7 +204,14 @@ namespace TaskManagerCourse.Client.ViewModels
             SelectedProject = null;
             SelectedUsersForProject = new();
         }
-
+        private void OpenProjectDesksPage()
+        {
+            if (SelectedProject.Model != null)
+            {
+                var page = new ProjectDesksPage();
+                mainWindowViewModel.OpenPage(page, $"Desks of {SelectedProject.Model.Name}", new ProjectDesksPageViewModel(token,SelectedProject.Model));
+            }
+        }
         #endregion
 
     }
