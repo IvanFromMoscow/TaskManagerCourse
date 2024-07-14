@@ -17,12 +17,12 @@ namespace TaskManagerCourse.Client.ViewModels
     {
         private CommonViewService viewService;
         #region Commands
-        public DelegateCommand OpenProjectsPageCommand;
-        public DelegateCommand OpenTasksPageCommand;
-        public DelegateCommand OpenDesksPageCommand;
-        public DelegateCommand OpenMyInfoPageCommand;
-        public DelegateCommand LogoutCommand;
-        public DelegateCommand OpenUsersManagerPageCommand;
+        public DelegateCommand OpenProjectsPageCommand { get; private set; }
+        public DelegateCommand OpenTasksPageCommand { get; private set; }
+        public DelegateCommand OpenDesksPageCommand { get; private set; }
+        public DelegateCommand OpenMyInfoPageCommand { get; private set; }
+        public DelegateCommand LogoutCommand { get; private set; }
+        public DelegateCommand OpenUsersManagerPageCommand { get; private set; }
 
         #endregion
         public MainWindowViewModel(AuthToken token, UserModel currentUser, Window currentWindow = null)
